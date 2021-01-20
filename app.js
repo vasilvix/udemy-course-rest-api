@@ -28,6 +28,7 @@ const fileFilter = function fileFilter (req, file, cb) {
 }
 
 const feedRoutes = require('./routes/feed')
+const authRoutes = require('./routes/auth')
 
 const MONGODB_URI = process.env.MONGODB_URI
 const app = express()
@@ -44,12 +45,13 @@ app.use((req, res, next) => {
 })
 
 app.use('/feed', feedRoutes)
+app.use('/auth', authRoutes)
 
 app.use((error, req, res, next) => {
   console.error(error)
   const statusCode = error.statusCode || (500)
-  const message = error.message
-  res.status(statusCode).json({ message })
+  const { message, data } = error
+  res.status(statusCode).json({ message, data })
 })
 
 mongoose
